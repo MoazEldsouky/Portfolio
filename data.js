@@ -242,18 +242,26 @@ const PORTFOLIO_DATA = {
 
 const PORTFOLIO_LOCAL_KEY = 'portfolio_data';
 
+function canUseLocalPortfolioOverride() {
+  return window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+}
+
 function getPortfolioData() {
-  try {
-    const stored = localStorage.getItem(PORTFOLIO_LOCAL_KEY);
-    if (stored) return JSON.parse(stored);
-  } catch (e) {}
+  if (canUseLocalPortfolioOverride()) {
+    try {
+      const stored = localStorage.getItem(PORTFOLIO_LOCAL_KEY);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+  }
   return JSON.parse(JSON.stringify(PORTFOLIO_DATA));
 }
 
 function savePortfolioData(data) {
+  if (!canUseLocalPortfolioOverride()) return;
   localStorage.setItem(PORTFOLIO_LOCAL_KEY, JSON.stringify(data));
 }
 
 function clearPortfolioData() {
+  if (!canUseLocalPortfolioOverride()) return;
   localStorage.removeItem(PORTFOLIO_LOCAL_KEY);
 }
