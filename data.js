@@ -265,3 +265,8 @@ function clearPortfolioData() {
   if (!canUseLocalPortfolioOverride()) return;
   localStorage.removeItem(PORTFOLIO_LOCAL_KEY);
 }
+
+function serializePortfolioData(data) {
+  const content = JSON.stringify(data, null, 2);
+  return `// Portfolio content source of truth.\n// Update this file and redeploy to publish changes for everyone.\nconst PORTFOLIO_DATA = ${content};\n\nconst PORTFOLIO_LOCAL_KEY = 'portfolio_data';\n\nfunction canUseLocalPortfolioOverride() {\n  return window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';\n}\n\nfunction getPortfolioData() {\n  if (canUseLocalPortfolioOverride()) {\n    try {\n      const stored = localStorage.getItem(PORTFOLIO_LOCAL_KEY);\n      if (stored) return JSON.parse(stored);\n    } catch (e) {}\n  }\n  return JSON.parse(JSON.stringify(PORTFOLIO_DATA));\n}\n\nfunction savePortfolioData(data) {\n  if (!canUseLocalPortfolioOverride()) return;\n  localStorage.setItem(PORTFOLIO_LOCAL_KEY, JSON.stringify(data));\n}\n\nfunction clearPortfolioData() {\n  if (!canUseLocalPortfolioOverride()) return;\n  localStorage.removeItem(PORTFOLIO_LOCAL_KEY);\n}\n`;
+}
