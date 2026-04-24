@@ -1,6 +1,7 @@
 
-// Shared default portfolio data
-const DEFAULT_DATA = {
+// Portfolio content source of truth.
+// Update this file and redeploy to publish changes for everyone.
+const PORTFOLIO_DATA = {
   hero: {
     name: "Moaz Eldsouky",
     titles: ["AI Engineer", "NLP & ML Engineer", "Data Scientist", "LLM Specialist"],
@@ -100,14 +101,25 @@ const DEFAULT_DATA = {
   sections: ["hero", "about", "skills", "experience", "projects", "education", "contact"]
 };
 
+const PORTFOLIO_LOCAL_KEY = 'portfolio_data';
+
 function getPortfolioData() {
   try {
-    const stored = localStorage.getItem('portfolio_data');
+    const stored = localStorage.getItem(PORTFOLIO_LOCAL_KEY);
     if (stored) return JSON.parse(stored);
-  } catch(e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(PORTFOLIO_DATA));
 }
 
 function savePortfolioData(data) {
-  localStorage.setItem('portfolio_data', JSON.stringify(data));
+  localStorage.setItem(PORTFOLIO_LOCAL_KEY, JSON.stringify(data));
+}
+
+function clearPortfolioData() {
+  localStorage.removeItem(PORTFOLIO_LOCAL_KEY);
+}
+
+function serializePortfolioData(data) {
+  const content = JSON.stringify(data, null, 2);
+  return `// Portfolio content source of truth.\n// Update this file and redeploy to publish changes for everyone.\nconst PORTFOLIO_DATA = ${content};\n\nconst PORTFOLIO_LOCAL_KEY = 'portfolio_data';\n\nfunction getPortfolioData() {\n  try {\n    const stored = localStorage.getItem(PORTFOLIO_LOCAL_KEY);\n    if (stored) return JSON.parse(stored);\n  } catch (e) {}\n  return JSON.parse(JSON.stringify(PORTFOLIO_DATA));\n}\n\nfunction savePortfolioData(data) {\n  localStorage.setItem(PORTFOLIO_LOCAL_KEY, JSON.stringify(data));\n}\n\nfunction clearPortfolioData() {\n  localStorage.removeItem(PORTFOLIO_LOCAL_KEY);\n}\n`;
 }
