@@ -1,5 +1,5 @@
 // Portfolio content source of truth.
-// Update this file and redeploy to publish changes for everyone.
+// Edit via admin.html, then click "Export data.js" to download and replace this file for permanent deployment.
 const PORTFOLIO_DATA = {
   "hero": {
     "name": "Moaz Eldsouky",
@@ -180,12 +180,15 @@ const PORTFOLIO_DATA = {
         "Python",
         "Hugging Face Transformers",
         "AraBERTv02",
-        "Gradio"
+        "PyTorch",
+        "TensorFlow / Keras",
+        "Scikit-Learn"
       ],
       "description": "Collected and labeled 1,000 Arabic restaurant reviews; fine-tuned AraBERTv02 for binary sentiment classification, achieving 99% accuracy on the held-out test set. Deployed as a live public demo on Hugging Face Spaces.",
       "highlight": "99% Accuracy",
       "link": "https://github.com/MoazEldsouky/Arabic-Restaurant-Review-Sentiment-Analysis",
-      "image": "https://github.com/MoazEldsouky/Agentic-Medical-RAG-Chatbot/raw/main/assets/1.png"
+      "image": "https://ms.hsoubcdn.com/uploads/portfolios/3117042/662fdb80d9101/positive.png",
+      "demo": "https://huggingface.co/spaces/moazx/Sentiment_analysis_for_restaurant_reviews_in_Arabic"
     },
     {
       "id": "p3",
@@ -195,10 +198,17 @@ const PORTFOLIO_DATA = {
         "Scikit-learn",
         "SVM",
         "TF-IDF",
-        "Hugging Face"
+        "Hugging Face",
+        "NLTK",
+        "SpaCy",
+        "NumPy",
+        "Pandas"
       ],
       "description": "Built an SVM classifier on TF-IDF features categorizing BBC News articles into 5 classes (Sports, Tech, Entertainment, Politics, Business), achieving 98% accuracy with a clean, production-ready inference pipeline.",
-      "highlight": "98% Accuracy"
+      "highlight": "98% Accuracy",
+      "link": "https://github.com/MoazEldsouky/News-Classification-with-SVC-Clearly-Explained",
+      "demo": "https://huggingface.co/spaces/moazx/News_Categorizer",
+      "image": "https://ms.hsoubcdn.com/uploads/thumbnails/3117042/65ea365228d65/ML2-1.jpg"
     },
     {
       "id": "p4",
@@ -244,26 +254,27 @@ const PORTFOLIO_DATA = {
 
 const PORTFOLIO_LOCAL_KEY = 'portfolio_data';
 
-function canUseLocalPortfolioOverride() {
-  return window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-}
-
+// Always read from localStorage first (works on any host), fallback to hardcoded data
 function getPortfolioData() {
-  if (canUseLocalPortfolioOverride()) {
-    try {
-      const stored = localStorage.getItem(PORTFOLIO_LOCAL_KEY);
-      if (stored) return JSON.parse(stored);
-    } catch (e) {}
-  }
+  try {
+    const stored = localStorage.getItem(PORTFOLIO_LOCAL_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch (e) {}
   return JSON.parse(JSON.stringify(PORTFOLIO_DATA));
 }
 
+// Always save to localStorage (works on any host)
 function savePortfolioData(data) {
-  if (!canUseLocalPortfolioOverride()) return;
-  localStorage.setItem(PORTFOLIO_LOCAL_KEY, JSON.stringify(data));
+  try {
+    localStorage.setItem(PORTFOLIO_LOCAL_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.warn('Could not save to localStorage:', e);
+  }
 }
 
+// Reset localStorage back to the hardcoded defaults
 function clearPortfolioData() {
-  if (!canUseLocalPortfolioOverride()) return;
-  localStorage.removeItem(PORTFOLIO_LOCAL_KEY);
+  try {
+    localStorage.removeItem(PORTFOLIO_LOCAL_KEY);
+  } catch (e) {}
 }
